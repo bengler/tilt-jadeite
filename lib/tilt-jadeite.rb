@@ -15,18 +15,12 @@ module Tilt
       end
 
       def prepare
-        @environment = ::Jadeite::Environment.new
-        if @file
-          @precompiled = @environment.compile_file(@file)
-        end
+        env = ::Jadeite::Environment.new
+        @compiled = env.compile(data, :filename => eval_file)
       end
 
       def evaluate(scope, locals, &block)
-        if @precompiled
-          @precompiled.render(locals.merge(scope.is_a?(Hash) ? scope : {}))
-        else
-          @environment.render(data.to_s, locals.merge(scope.is_a?(Hash) ? scope : {}))
-        end
+        @compiled.render(locals.merge(scope.is_a?(Hash) ? scope : {}))
       end
     end
   end

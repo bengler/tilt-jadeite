@@ -10,12 +10,20 @@ class JadeApp < Sinatra::Base
 
   helpers Sinatra::Jade
 
+  get "/string" do
+    jade 'p this is soo #{adjective.substring(0,5) + "in awesome"}', :locals => {:adjective => "freaky"}
+  end
+
   get "/simple" do
     jade :simple, :locals => { :pageTitle => "Jade", :youAreUsingJade => true }
   end
 
   get "/include" do
     jade :include
+  end
+
+  get "/include_from_route" do
+    jade "include fixtures/views/includes/head"
   end
 
 end
@@ -27,16 +35,30 @@ describe "Sinatra helper" do
     JadeApp
   end
 
-  it "It renders a simple Jade template passing a couple of variables" do
+  it "renders a string" do
+    verify :format => :html do
+      get "/string"
+      last_response.body
+    end
+  end
+
+  it "renders a simple Jade template passing a couple of variables" do
     verify :format => :html do
       get "/simple"
       last_response.body
     end
   end
 
-  it "It handles includes of other Jade files" do
+  it "handles includes of other Jade files" do
     verify :format => :html do
       get "/include"
+      last_response.body
+    end
+  end
+
+  it "handles includes from a jade template in the Sinatra route" do
+    verify :format => :html do
+      get "/include_from_route"
       last_response.body
     end
   end
