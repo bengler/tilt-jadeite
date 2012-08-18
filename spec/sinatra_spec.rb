@@ -10,6 +10,24 @@ class JadeApp < Sinatra::Base
 
   helpers Sinatra::Jade
 
+  helpers do
+    def foo(what)
+      "Foo says #{what}"
+    end
+
+    def play(artist, song)
+      "Play #{song} from #{artist}"
+    end
+
+    def say_hello
+      "Hello World!"
+    end
+
+    def development
+      true
+    end
+  end
+
   get "/string" do
     jade 'p this is soo #{adjective.substring(0,5) + "in awesome"}', :locals => {:adjective => "freaky"}
   end
@@ -24,6 +42,15 @@ class JadeApp < Sinatra::Base
 
   get "/include_from_route" do
     jade "include fixtures/views/includes/head"
+  end
+
+  get "/helper_lambdas" do
+    jade :helper_lambdas, :locals => {
+      :foo => proc {|_,what| foo(what) },
+      :play => proc {|_,artist, song| play(artist, song) },
+      :say_hello => ->{ say_hello },
+      :development => ->{ development? }
+    }
   end
 
 end
@@ -63,4 +90,11 @@ describe "Sinatra helper" do
     end
   end
 
+  it "calls helper methods on scope" do
+    get "/helper_lambdas"
+    #last_response.status.should eq 200
+    verify :format => :html do
+      last_response.body
+    end
+  end
 end

@@ -6,6 +6,9 @@ require 'tilt'
 
 module Tilt
   module Jadeite
+
+    class << self; attr_accessor :environment end
+
     class JadeTemplate < Template
       self.default_mime_type = "text/html"
 
@@ -14,13 +17,16 @@ module Tilt
         require_template_library 'jade'
       end
 
+      def environment
+        Jadeite.environment ||= ::Jadeite::Environment.new
+      end
+
       def prepare
-        env = ::Jadeite::Environment.new
-        @compiled = env.compile(data, :filename => eval_file)
+        @compiled ||= environment.compile(data, :filename => eval_file)
       end
 
       def evaluate(scope, locals, &block)
-        @compiled.render(locals.merge(scope.is_a?(Hash) ? scope : {}))
+        @compiled.render(locals)
       end
     end
   end
