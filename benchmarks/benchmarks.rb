@@ -1,6 +1,8 @@
+require 'bundler'
+Bundler.require
 require 'benchmark'
-require 'tilt'
-require '../lib/tilt-jadeite'
+require 'haml'
+require 'tilt-jadeite'
 
 class Scope
 

@@ -1,28 +1,25 @@
 # Tilt extension for jade
-
-require "tilt-jadeite/version"
-require 'jadeite/environment'
-require 'tilt'
-
 module Tilt
   module Jadeite
 
-    class << self; attr_accessor :environment end
+    require 'tilt-jadeite/version'
+    require 'tilt'
+    require 'jadeite'
 
     class JadeTemplate < Template
       self.default_mime_type = "text/html"
 
       def initialize_engine
         return if defined? ::Jadeite
-        require_template_library 'jade'
+        require_template_library 'jadeite'
       end
 
       def environment
-        Jadeite.environment ||= ::Jadeite::Environment.new
+        @@environment ||= (@@environment = ::Jadeite::Environment.new(@options))
       end
 
       def prepare
-        @compiled ||= environment.compile(data, :filename => eval_file)
+        @compiled = environment.compile(data, filename: eval_file)
       end
 
       def evaluate(scope, locals, &block)

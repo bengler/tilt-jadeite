@@ -8,6 +8,8 @@ require "tilt-jadeite/sinatra"
 class JadeApp < Sinatra::Base
   set :root, File.dirname(__FILE__)+"/fixtures"
 
+  set :jade, :cache => true
+
   helpers Sinatra::Jade
 
   helpers do
@@ -90,7 +92,15 @@ describe "Sinatra helper" do
     end
   end
 
-  it "calls helper methods on scope" do
+  #it "calls helper methods on scope" do
+    #get "/helper_lambdas"
+    #last_response.status.should eq 200
+    #verify :format => :html do
+    #  last_response.body
+    #end
+  #end
+
+  it "can cache files" do
     get "/helper_lambdas"
     #last_response.status.should eq 200
     verify :format => :html do

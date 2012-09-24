@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+$:.push File.expand_path("../lib", __FILE__)
 require File.expand_path('../lib/tilt-jadeite/version', __FILE__)
 
 Gem::Specification.new do |gem|
@@ -15,10 +16,14 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Tilt::Jadeite::VERSION
 
+  gem.add_runtime_dependency "tilt"
+  gem.add_runtime_dependency "jadeite", '~> 0.0.8'
+
   gem.add_development_dependency "rspec"
   gem.add_development_dependency "rack-test"
+  gem.add_development_dependency "simplecov"
   gem.add_development_dependency "sinatra"
+  gem.add_development_dependency "haml"
   gem.add_development_dependency "approvals"
-  gem.add_runtime_dependency "tilt"
-  gem.add_runtime_dependency "jadeite"
+
 end
