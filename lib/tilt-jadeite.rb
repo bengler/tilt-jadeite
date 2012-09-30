@@ -14,12 +14,8 @@ module Tilt
         require_template_library 'jadeite'
       end
 
-      def environment
-        @@environment ||= (@@environment = ::Jadeite::Environment.new(@options))
-      end
-
       def prepare
-        @compiled = environment.compile(data, filename: eval_file)
+        @compiled = ::Jadeite::Environment.instance.compile(data, filename: eval_file)
       end
 
       def evaluate(scope, locals, &block)

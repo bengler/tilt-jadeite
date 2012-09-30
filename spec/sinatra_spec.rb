@@ -8,9 +8,7 @@ require "tilt-jadeite/sinatra"
 class JadeApp < Sinatra::Base
   set :root, File.dirname(__FILE__)+"/fixtures"
 
-  set :jade, :cache => true
-
-  helpers Sinatra::Jade
+  register Sinatra::Jade
 
   helpers do
     def foo(what)
@@ -44,15 +42,6 @@ class JadeApp < Sinatra::Base
 
   get "/include_from_route" do
     jade "include fixtures/views/includes/head"
-  end
-
-  get "/helper_lambdas" do
-    jade :helper_lambdas, :locals => {
-      :foo => proc {|_,what| foo(what) },
-      :play => proc {|_,artist, song| play(artist, song) },
-      :say_hello => ->{ say_hello },
-      :development => ->{ development? }
-    }
   end
 
 end
@@ -92,19 +81,4 @@ describe "Sinatra helper" do
     end
   end
 
-  #it "calls helper methods on scope" do
-    #get "/helper_lambdas"
-    #last_response.status.should eq 200
-    #verify :format => :html do
-    #  last_response.body
-    #end
-  #end
-
-  it "can cache files" do
-    get "/helper_lambdas"
-    #last_response.status.should eq 200
-    verify :format => :html do
-      last_response.body
-    end
-  end
 end

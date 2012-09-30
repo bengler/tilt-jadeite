@@ -1,8 +1,13 @@
 module Sinatra
   module Jade
-    def jade(*args)
-      render(:jade, *args)
+    module Helpers
+      def jade(*args)
+        render(:jade, *args)
+      end
+    end
+    def self.registered(app)
+      app.helpers(Jade::Helpers)
     end
   end
-  helpers Jade
+  helpers Jade::Helpers
 end
